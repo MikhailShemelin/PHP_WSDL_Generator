@@ -11,12 +11,7 @@ abstract class AbstractTypedArray extends AbstractComplexType implements \Iterat
 	
 	public array $item;
 	
-	//public static function getSingleItemReflectionType(): \ReflectionType {
-	//	$class_reflection = new \ReflectionClass(get_called_class());
-	//	return $class_reflection->getProperty('single_item')->getType();
-	//}
-	
-	public function __construct($arr = []) {
+	public function __constructor($arr = []) {
 		$this->item = $arr;
 	}
 	

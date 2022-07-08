@@ -15,7 +15,13 @@ class Generator {
 	protected $xml_port_type;
 	protected $xml_binding;
 	protected $xml_types_schema;
-	protected $classmap = [];
+	protected $classmap  = [];
+	protected $xsd_types = [
+		'int'    => 'int',
+		'float'  => 'float',
+		'string' => 'string',
+		'bool'   => 'boolean',
+	];
 	
 	public function __construct($service_class_instance, $name, $url_wsdl, $url_service)
 	{
@@ -102,10 +108,6 @@ class Generator {
 	
 	public function getXMLFormatted()
 	{
-		//$dom = new \DOMDocument("1.0");
-		//$dom->preserveWhiteSpace = false;
-		//$dom->formatOutput = true;
-		//$dom->loadXML($this->xml->asXML());
 		$this->xml_dom->formatOutput = true;
 		return $this->xml_dom->saveXML();
 	}
@@ -181,9 +183,9 @@ class Generator {
 	
 	protected function getServicePublicMethodsReflections($service_instance) {
 		$class_reflection        = new \ReflectionClass($service_instance);
-		$class_public_methods = $class_reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
+		$class_public_methods    = $class_reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
 		$parent_class_reflection = $class_reflection->getParentClass();
-		$service_methods = [];
+		$service_methods         = [];
 		foreach($class_public_methods as $class_method_key => $class_method_reflection) {
 			if (!$class_method_reflection->isConstructor() && !$class_method_reflection->isDestructor()) {
 				if (!$parent_class_reflection || !$parent_class_reflection->hasMethod($class_method_reflection->name) ) {
@@ -251,6 +253,7 @@ class Generator {
 						$element = $this->addChildTo($sequence, 'xsd:element');
 						$element->setAttribute('name', $reflection_class_property->getName());
 						$element->setAttribute('type', $this->getWSDLTypeNameByReflectionType($reflection_class_property->getType()));
+						$element->setAttribute('minOccurs', '0');
 					}
 				}
 			}
@@ -274,25 +277,10 @@ class Generator {
 	protected function getWSDLTypeNameByReflectionType($reflection_type)
 	{
 		
-		if ( $reflection_type && in_array($reflection_type->getName(), ['int', 'string', 'float']) ) {
-			return 'xsd:'.$reflection_type->getName();
-		//} elseif ( $rtype && $rtype->getName() == 'array' ) {
-		//
-		//	// ******** check type exists
-		//
-		//	$element = $this->addChildTo($this->getXMLTypesSchema(), 'element');
-		//	$element->setAttribute('name', 'Array');
-		//	$element_complex_type = $this->addChildTo($element, 'complexType');
-		//	$sequence = $this->addChildTo($element_complex_type, 'sequence');
-		//	//$sequence->setAttribute('minOccurs', '0');
-		//	$sequence->setAttribute('maxOccurs', 'unbounded');
-		//	//$sequence->setAttribute('type', 'xsd:anyType');
-		//
-		//	//return 'soap-enc:array';
-		//	return 'tns:Array';
+		if ( $reflection_type && isset($this->xsd_types[$reflection_type->getName()])) {
+			return 'xsd:'.$this->xsd_types[$reflection_type->getName()];
 		
 		} elseif ( !$reflection_type->isBuiltin() && class_exists($reflection_type->getName()) ) { // custom type
-			
 			return $this->getWSDLComplexTypeNameByReflectionType($reflection_type);
 			
 		} else { // better never happen (for 1C - 100% never)
@@ -310,6 +298,10 @@ class Generator {
 		foreach($class_method_params as $class_method_param_key => $class_method_param_reflection) {
 			$xml_message_part = $this->addChildTo($xml_message, 'part');
 			$xml_message_part->setAttribute('name', $class_method_param_reflection->name);
+			
+			//$xml_message_part->setAttribute('xsi:nil', 'true');
+			//$xml_message_part->setAttribute('nillable', 'true');
+			
 			//$xml_message_part->setAttribute('type', 'xsd:anyType');
 			$xml_message_part->setAttribute('type', $this->getWSDLTypeNameByReflectionType($class_method_param_reflection->getType()));
 		}
@@ -366,34 +358,5 @@ class Generator {
 		$binding_operation_output_soap->setAttribute('namespace', $this->url_service );
 		
 	}
-	
-	//
-	//protected function getClassMethodDescriptionMessageMethodParts($class_method) {
-	//	$class_method_params = $class_method->getParameters();
-	//	$parts = '';
-	//	foreach($class_method_params as $class_method_param_key => $class_method_param) {
-	//		$parts .= '    <part name="'.$class_method_param->name.'" type="xsd:anyType"/>';
-	//	}
-	//	return $parts;
-	//}
-	//
-	//protected function getClassMethodDescriptionMessageMethods($class_method) {
-	//
-	//	$message_method_parts = $this->getClassMethodDescriptionMessageMethodParts($class_method);
-	//	$message_methods .= '<message name="'.$methodValue->name.'Request">
-	//							'.$messageMethodParts.'
-	//				</message>
-	//				<message name="'.$methodValue->name.'Response">
-	//					<part name="Result" type="xsd:anyType"/>
-	//				</message>';
-	//}
-	//
-	//protected function getClassMethodDescriptionPortTypeOperations($class_method) {
-	//
-	//}
-	//
-	//protected function getClassMethodDescriptionBindingOperations($class_method) {
-	//
-	//}
 	
 }
