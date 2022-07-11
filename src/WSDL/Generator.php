@@ -17,10 +17,10 @@ class Generator {
 	protected $xml_types_schema;
 	protected $classmap  = [];
 	protected $xsd_types = [
-		'int'    => 'int',
-		'float'  => 'float',
-		'string' => 'string',
-		'bool'   => 'boolean',
+		'int'     => 'int',
+		'float'   => 'float',
+		'string'  => 'string',
+		'bool'    => 'Boolean',
 	];
 	
 	public function __construct($service_class_instance, $name, $url_wsdl, $url_service)
@@ -74,12 +74,13 @@ class Generator {
 	public function getUniqueWSDLTypeNameByClassReflection($reflection_class)
 	{
 		
-		if ( $reflection_class->hasProperty('wsdl_type_name') && $reflection_class->getProperty('wsdl_type_name')->getValue() ) {
-			$type_name = $reflection_class->getProperty('wsdl_type_name')->getValue();
-		} else {
-			$type_name = $reflection_class->getShortName();
-			//$type_name = str_replace('\\', '_', $reflection_class->getName());
-		}
+		//if ( $reflection_class->hasProperty('wsdl_type_name') && $reflection_class->getProperty('wsdl_type_name')->getValue() ) {
+		//	$type_name = $reflection_class->getProperty('wsdl_type_name')->getValue();
+		//} else {
+		//	$type_name = $reflection_class->getShortName();
+		//	//$type_name = str_replace('\\', '_', $reflection_class->getName());
+		//}
+		$type_name = $reflection_class->getMethod('getWSDLTypeName')->invoke(null);
 		
 		$type_name_full = $type_name;
 		$cnt            = 0;
@@ -212,10 +213,10 @@ class Generator {
 		
 	}
 	
-	protected function hasCustomType($name)
-	{
-		// ******** implement
-	}
+	//protected function hasCustomType($name)
+	//{
+	//	// ******** implement
+	//}
 	
 	protected function getWSDLComplexTypeNameByReflectionType($reflection_type)
 	{
@@ -258,18 +259,6 @@ class Generator {
 				}
 			}
 			
-		//<xsd:complexType name="TestObject">
-		//	<xsd:sequence>
-		//		<xsd:element name="name" type="xsd:string"/>
-		//		<xsd:element name="id" type="xsd:int"/>
-		//	</xsd:sequence>
-		//</xsd:complexType>
-		
-		//<xsd:complexType name="ArrayOfObjects">
-		//	<xsd:sequence >
-		//		<xsd:element name="item" maxOccurs="unbounded" minOccurs="0" type="tns:TestObject" />
-		//	</xsd:sequence>
-		//</xsd:complexType>
 			return 'tns:'.$type_name;
 		}
 	}
@@ -358,5 +347,4 @@ class Generator {
 		$binding_operation_output_soap->setAttribute('namespace', $this->url_service );
 		
 	}
-	
 }

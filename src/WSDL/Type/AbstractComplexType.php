@@ -5,7 +5,10 @@ namespace WSDL\Type;
 abstract class AbstractComplexType
 {
 	
-	// a custom WSDL type name (otherwise class name without namespace will be used) {
-	public static string $wsdl_type_name = '';
+	// can be overrided in childs if necessary to have custom WSDL type names
+	public static function getWSDLTypeName() {
+		$reflection_class = new \ReflectionClass(get_called_class());
+		return $reflection_class->getShortName();
+	}
 	
 }
