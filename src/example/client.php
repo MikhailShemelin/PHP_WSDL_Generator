@@ -30,21 +30,27 @@ foreach($client->__getFunctions() as $fn_description) {
 echo("<br>\n");
 echo("Results: <br><br>\n\n");
 
+echo(" - returnMyString: <br>\n");
 var_dump($client->returnMyString('The string I am sending from client'));
 echo("<br><br>\n\n");
 
+echo(" - getRandomInt: <br>\n");
 var_dump($client->getRandomInt());
 echo("<br><br>\n\n");
 
+echo(" - getArrayOfRandomInts: <br>\n");
 var_dump($client->getArrayOfRandomInts());
 echo("<br><br>\n\n");
 
+echo(" - getTestObject: <br>\n");
 var_dump($client->getTestObject());
 echo("<br><br>\n\n");
 
+echo(" - returnMyTestObject: <br>\n");
 var_dump($client->returnMyTestObject(['id'=>777, 'name'=>'Client obj name']));
 echo("<br><br>\n\n");
 
+echo(" - getArrayOfTestObjects: <br>\n");
 var_dump($client->getArrayOfTestObjects());
 echo("<br><br>\n\n");
 
