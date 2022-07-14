@@ -32,7 +32,7 @@ To let the SOAP service to work with defined custom types as incoming parameters
 service and custom types  
 https://github.com/MikhailShemelin/WSDLGenerator/blob/main/src/example/service.php
 
-server  
+server   
 https://github.com/MikhailShemelin/WSDLGenerator/blob/main/src/example/server.php
 
 client (just for demonstrating the client side work, it does not use the generator lib directly)  
