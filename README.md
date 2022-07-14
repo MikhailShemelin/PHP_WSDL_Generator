@@ -9,7 +9,7 @@ Supposed to be used together with the standard PHP SoapServer class, but can be 
 # Basics
 
 The generator creates WSDL using a service class instance for reference. 
-It relies on defined types of parameters and results of the service class (so **defining all types there is mandatory**, required PHP7.4+).
+It relies on defined types of parameters and results of the service class public functions (so **defining all types there is mandatory**, required PHP7.4+).
 
 Supported simple types:
  - int 
