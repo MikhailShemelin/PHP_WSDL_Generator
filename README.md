@@ -1,4 +1,4 @@
-# WSDLGenerator
+# PHP_WSDL_Generator
 
 Another one WSDL generator for PHP.  
 
