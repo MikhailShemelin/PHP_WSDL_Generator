@@ -1,8 +1,10 @@
 # WSDLGenerator
 
-Another one WSDL generator.  
+Another one WSDL generator for PHP.  
 
 Because I found nothing really working for my case, where an automatic generation of WSDL for SOAP service used by a specific accounting application (1С/1C/1S) having very strict requirements was necessary.
+
+Supposed to be used together with the standard PHP SoapServer class, but can be used with other server implementations too. 
 
 # Basics
 
