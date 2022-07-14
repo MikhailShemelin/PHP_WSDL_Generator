@@ -20,9 +20,9 @@ class Generator {
 		'bool'   => 'Boolean',
 	];
 	
-	public function __construct($service_class_instance, $name, $url_wsdl, $url_service)
+	public function __construct($service_class_instance, $service_name, $url_wsdl, $url_service)
 	{
-		$this->name        = $name;
+		$this->name        = $service_name;
 		$this->url_service = $url_service;
 		$this->url_wsdl    = $url_wsdl;
 		
